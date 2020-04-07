@@ -1,4 +1,7 @@
+package com.example.github.data.network.model
+
 import com.google.gson.annotations.SerializedName
+
 
 /*
 Copyright (c) 2020 Kotlin Data Classes Generated from JSON powered by http://www.json2kotlin.com
@@ -13,12 +16,12 @@ For support, please feel free to contact me at https://www.linkedin.com/in/syeda
 
 
 data class NetworkGithubRepository(
-	@SerializedName("id") val id: Int,
+    @SerializedName("id") val id: Int,
     @SerializedName("node_id") val node_id: String,
     @SerializedName("name") val name: String,
     @SerializedName("full_name") val full_name: String,
     @SerializedName("private") val private: Boolean,
-    @SerializedName("owner") val owner: Owner,
+    @SerializedName("owner") val owner: NetworkOwner,
     @SerializedName("html_url") val html_url: String,
     @SerializedName("description") val description: String,
     @SerializedName("fork") val fork: Boolean,
