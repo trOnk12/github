@@ -3,7 +3,7 @@
 
     <data>
         <variable
-            name="item"
+            name="repository"
             type="com.example.github.domain.model.Repository" />
     </data>
 
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_normal"
-            android:text="test"
+            android:text="@{repository.name}"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toEndOf="@+id/iv_thumb"
             app:layout_constraintTop_toTopOf="@+id/iv_thumb"

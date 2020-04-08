@@ -15,8 +15,8 @@ class GithubRepository
         return githubRepositoryService.get().map { networkGithubRepository ->
             Repository(
                 id = networkGithubRepository.id,
-                name = networkGithubRepository.name,
-                description = networkGithubRepository.description,
+                name = networkGithubRepository.name ?: "No name",
+                description = networkGithubRepository.description ?: "No description",
                 owner = User(
                     id = networkGithubRepository.owner.id,
                     name = networkGithubRepository.owner.login,
@@ -30,8 +30,8 @@ class GithubRepository
         return githubRepositoryService.get(repositoryName).map { networkGithubRepository ->
             Repository(
                 id = networkGithubRepository.id,
-                name = networkGithubRepository.name,
-                description = networkGithubRepository.description,
+                name = networkGithubRepository.name ?: "No name",
+                description = networkGithubRepository.description ?: "No description",
                 owner = User(
                     id = networkGithubRepository.owner.id,
                     name = networkGithubRepository.owner.login,
