@@ -1,16 +1,17 @@
-package com.example.github.data.network.service
+package com.example.github.data.network.api
 
 
 import com.example.github.data.network.model.NetworkGithubRepository
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface GithubRepositoryService {
+interface GithubRepositoryApi {
 
     @GET("users/{id}")
-    suspend fun get(@Path("name") name: String): List<NetworkGithubRepository>
+     fun get(@Path("name") name: String): Call<List<NetworkGithubRepository>>
 
     @GET("/repositories")
-    suspend fun get(): List<NetworkGithubRepository>
+    fun get(): Call<List<NetworkGithubRepository>>
 
 }

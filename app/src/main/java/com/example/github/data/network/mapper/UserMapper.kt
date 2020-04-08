@@ -3,8 +3,9 @@ package com.example.github.data.network.mapper
 import com.example.github.core.functional.mapper.Mapper
 import com.example.github.data.network.model.NetworkOwner
 import com.example.github.domain.model.User
+import javax.inject.Inject
 
-class UserMapper : Mapper<NetworkOwner, User> {
+class UserMapper @Inject constructor() : Mapper<NetworkOwner, User> {
 
     override fun map(input: NetworkOwner): User {
         return User(

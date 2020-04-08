@@ -4,5 +4,5 @@ import com.example.github.domain.model.Repository
 
 interface IGithubRepository {
     suspend fun get(): List<Repository>
-    suspend fun get(repositoryName: String): List<Repository>
+//    suspend fun get(repositoryName: String): List<Repository>
 }

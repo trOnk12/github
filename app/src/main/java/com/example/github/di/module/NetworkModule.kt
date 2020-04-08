@@ -1,7 +1,7 @@
 package com.example.github.di.module
 
 import com.example.github.BuildConfig
-import com.example.github.data.network.service.GithubRepositoryService
+import com.example.github.data.network.api.GithubRepositoryApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -38,8 +38,8 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideGithubRepositoryService(retrofit: Retrofit): GithubRepositoryService {
-        return retrofit.create(GithubRepositoryService::class.java)
+    fun provideGithubRepositoryService(retrofit: Retrofit): GithubRepositoryApi {
+        return retrofit.create(GithubRepositoryApi::class.java)
     }
 
 

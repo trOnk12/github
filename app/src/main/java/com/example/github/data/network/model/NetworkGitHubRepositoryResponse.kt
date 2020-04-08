@@ -1,4 +1,11 @@
 package com.example.github.data.network.model
 
-class NetworkGitHubRepositoryResponse {
-}
+data class NetworkGitHubRepositoryResponse(
+    val headerData: HeaderData,
+    val networkGitHubRepositories: List<NetworkGithubRepository>
+)
+
+data class HeaderData(
+    val nextLink: String,
+    val previousLink: String
+)

@@ -36,7 +36,7 @@ class ListAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Repository) = with(itemView) {
-            binding.item = item
+            binding.repository = item
             setOnClickListener { onClick(item, adapterPosition, binding.ivThumb) }
 
             binding.executePendingBindings()
