@@ -1,6 +1,5 @@
 package com.example.github.data.network.service
 
-import android.util.Log
 import com.example.github.data.network.api.GithubRepositoryApi
 import com.example.github.data.network.model.NetworkGitHubRepositoryResponse
 import com.example.github.data.network.tools.PageLinks
@@ -19,7 +18,7 @@ class GithubRepositoryService
     private val pageLinksMapper: PageLinksMapper
 ) {
 
-    suspend fun get(): NetworkGitHubRepositoryResponse =
+    suspend fun getPublic(): NetworkGitHubRepositoryResponse =
         withContext(Dispatchers.IO) {
             suspendCancellableCoroutine<NetworkGitHubRepositoryResponse> { continuation ->
                 val response = githubRepositoryApi.get().execute()
