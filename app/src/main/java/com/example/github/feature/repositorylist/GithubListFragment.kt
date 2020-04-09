@@ -2,6 +2,7 @@ package com.example.github.feature.repositorylist
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -54,7 +55,9 @@ class GithubListFragment : Fragment(R.layout.list_fragment) {
         et_search.addTextChangedListener(object : OnSearchTermChangedListener {
             override fun onSearchTermChanged(repositoryName: CharSequence?) {
                 repositoryName?.let {
-                    githubRepositoryListViewModel.searchRepositories(repositoryName.toString())
+                    observe(githubRepositoryListViewModel.searchRepositories(repositoryName.toString())) {
+                        githubRepositoryAdapter.submitList(it)
+                    }
                 }
             }
         })
@@ -81,7 +84,6 @@ class GithubListFragment : Fragment(R.layout.list_fragment) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         observe(githubRepositoryListViewModel.publicRepositories, ::onRepositoriesChanged)
-        githubRepositoryListViewModel.searchRepositories?.let { observe(it, ::onRepositoriesChanged) }
     }
 
     private fun onRepositoriesChanged(pagedList: PagedList<Repository>) {

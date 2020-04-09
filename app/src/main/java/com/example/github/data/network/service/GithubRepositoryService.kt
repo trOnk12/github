@@ -4,6 +4,7 @@ import com.example.github.data.network.api.GithubRepositoryApi
 import com.example.github.data.network.mapper.PageLinkMapper
 import com.example.github.data.network.model.NetworkGitHubRepositoryResponse
 import com.example.github.data.network.model.NetworkGithubRepository
+import com.example.github.data.network.model.NetworkGithubSearch
 import com.example.github.data.network.tools.PageLinks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -72,15 +73,15 @@ class GithubRepositoryService
 
     suspend fun get(repositoryName: String) =
         withContext(Dispatchers.IO) {
-            suspendCoroutine<NetworkGitHubRepositoryResponse> { continuation ->
+            suspendCoroutine<NetworkGithubSearch> { continuation ->
                 githubRepositoryApi.get(repositoryName).execute().let { response ->
                     if (response.isSuccessful) {
                         response.headers().value(NEXT_PAGE_INDEX).let { link ->
                             response.body()?.let { networkGithubRepositories ->
                                 continuation.resume(
-                                    NetworkGitHubRepositoryResponse(
+                                    NetworkGithubSearch(
                                         paginationInfo = pageLinkMapper.map(PageLinks(link)),
-                                        networkGitHubRepositories = networkGithubRepositories
+                                        networkGitHubRepositories =  networkGithubRepositories.items
                                     )
                                 )
                             }

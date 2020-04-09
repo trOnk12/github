@@ -2,7 +2,9 @@ package com.example.github.data.network.model
 
 import NetworkItems
 
-data class NetworkGitHubRepositoryResponse(
+
+data class NetworkGithubSearch(
     val paginationInfo: PaginationInfo,
-    val networkGitHubRepositories: List<NetworkGithubRepository>
+    val networkGitHubRepositories: List<NetworkItems>
 )
+

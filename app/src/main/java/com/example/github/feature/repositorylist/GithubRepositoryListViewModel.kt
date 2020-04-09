@@ -24,20 +24,17 @@ class GithubRepositoryListViewModel
         .setEnablePlaceholders(false)
         .build()
 
-    lateinit var pageKeyedRepositorySource: PageKeyedRepositorySource
-
     var publicRepositories: LiveData<PagedList<Repository>> =
         initializePublicRepositoriesPagedList(config).build()
 
     private fun initializePublicRepositoriesPagedList(config: PagedList.Config): LivePagedListBuilder<String, Repository> {
         val dataSourceFactory = object : DataSource.Factory<String, Repository>() {
             override fun create(): DataSource<String, Repository> {
-                pageKeyedRepositorySource = PageKeyedRepositorySource(
+              return PageKeyedRepositorySource(
                     viewModelScope,
                     networkGithubRepositoryResponseMapper,
                     githubRepositoryService
                 )
-                return pageKeyedRepositorySource
             }
 
         }
@@ -45,10 +42,8 @@ class GithubRepositoryListViewModel
         return LivePagedListBuilder<String, Repository>(dataSourceFactory, config)
     }
 
-    var searchRepositories: LiveData<PagedList<Repository>>? = null
-
-    fun searchRepositories(repositoryName: String) {
-        publicRepositories = initializeSearchRepositoriesPagedList(config, repositoryName).build()
+    fun searchRepositories(repositoryName: String): LiveData<PagedList<Repository>> {
+        return initializeSearchRepositoriesPagedList(config, repositoryName).build()
     }
 
     private fun initializeSearchRepositoriesPagedList(
@@ -68,12 +63,11 @@ class GithubRepositoryListViewModel
             }
         }
 
-        pageKeyedRepositorySearchSource.invalidate()
         return LivePagedListBuilder<String, Repository>(dataSourceFactory, config)
     }
 
     fun test() {
-        pageKeyedRepositorySource.invalidate()
+
     }
 
 }
