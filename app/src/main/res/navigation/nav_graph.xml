@@ -6,6 +6,6 @@
     <fragment xmlns:tools="http://schemas.android.com/tools"
         tools:layout="@layout/list_fragment"
         android:id="@+id/listFragment"
-        android:name="com.example.github.feature.list.ListFragment"
+        android:name="com.example.github.feature.repositorylist.GithubListFragment"
         android:label="ListFragment" />
 </navigation>

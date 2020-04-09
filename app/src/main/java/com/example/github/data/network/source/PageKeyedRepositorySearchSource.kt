@@ -7,7 +7,8 @@ import com.example.github.domain.model.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class PageKeyedRepositorySource(
+class PageKeyedRepositorySearchSource(
+    private val repositoryName:String,
     private val coroutineScope: CoroutineScope,
     private val networkGithubRepositoryResponseMapper: NetworkGithubRepositoryResponseMapper,
     private val githubRepositoryService: GithubRepositoryService
@@ -18,7 +19,7 @@ class PageKeyedRepositorySource(
         callback: LoadInitialCallback<String, Repository>
     ) {
         coroutineScope.launch {
-            githubRepositoryService.getPublic().let { networkGitHubRepositoryResponse ->
+            githubRepositoryService.get(repositoryName).let { networkGitHubRepositoryResponse ->
                 callback.onResult(
                     networkGithubRepositoryResponseMapper.map(networkGitHubRepositoryResponse),
                     null,

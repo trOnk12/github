@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import dog.snow.androidrecruittest.di.module.viewmodel.ViewModelFactory
 import dog.snow.androidrecruittest.di.module.viewmodel.ViewModelKey
-import com.example.github.feature.list.ListFragmentViewModel
+import com.example.github.feature.repositorylist.GithubRepositoryListViewModel
 
 
 @Module
@@ -18,6 +18,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ListFragmentViewModel::class)
-    internal abstract fun listFragmentViewModel(viewModel: ListFragmentViewModel): ViewModel
+    @ViewModelKey(GithubRepositoryListViewModel::class)
+    internal abstract fun listFragmentViewModel(githubRepository: GithubRepositoryListViewModel): ViewModel
 }

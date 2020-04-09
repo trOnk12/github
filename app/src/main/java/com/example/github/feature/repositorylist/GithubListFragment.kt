@@ -1,4 +1,4 @@
-package com.example.github.feature.list
+package com.example.github.feature.repositorylist
 
 import android.content.Context
 import android.os.Bundle
@@ -12,20 +12,20 @@ import com.example.github.GithubApp
 import com.example.github.R
 import com.example.github.core.extension.observe
 import com.example.github.domain.model.Repository
-import com.example.github.feature.list.adapter.ListAdapter
-import dog.snow.androidrecruittest.feature.list.DaggerListFragmentComponent
+import com.example.github.feature.repositorylist.adapter.GithubRepositoryAdapter
+import kotlinx.android.synthetic.main.layout_search.*
 import kotlinx.android.synthetic.main.list_fragment.*
 import javax.inject.Inject
 
-class ListFragment : Fragment(R.layout.list_fragment) {
+class GithubListFragment : Fragment(R.layout.list_fragment) {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    lateinit var adapter: ListAdapter
+    lateinit var githubRepositoryAdapter: GithubRepositoryAdapter
 
-    private val listItemViewModel: ListFragmentViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[ListFragmentViewModel::class.java]
+    private val githubRepositoryListViewModel: GithubRepositoryListViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[GithubRepositoryListViewModel::class.java]
     }
 
     override fun onAttach(context: Context) {
@@ -34,7 +34,7 @@ class ListFragment : Fragment(R.layout.list_fragment) {
     }
 
     private fun initializeDaggerDependency() {
-        DaggerListFragmentComponent
+        DaggerGithubListFragmentComponent
             .builder()
             .coreComponent(GithubApp.coreComponent(requireContext()))
             .build()
@@ -47,20 +47,22 @@ class ListFragment : Fragment(R.layout.list_fragment) {
     }
 
     private fun initializeView() {
-        adapter = ListAdapter(::onItemClick).also {
+        githubRepositoryAdapter = GithubRepositoryAdapter(::onItemClick).also {
             rv_items.adapter = it
         }
 
-//        et_search.addTextChangedListener(object : OnSearchTermChangedListener {
-//            override fun onSearchTermChanged(p0: CharSequence?) {
-//                p0?.let {
-//                    adapter.filterItems(p0)
-//                }
-//            }
-//        })
+        et_search.addTextChangedListener(object : OnSearchTermChangedListener {
+            override fun onSearchTermChanged(repositoryName: CharSequence?) {
+                repositoryName?.let {
+                    githubRepositoryListViewModel.searchRepositories(repositoryName.toString())
+                }
+            }
+        })
+
+        test_button.setOnClickListener { githubRepositoryListViewModel.test() }
+
     }
 
-    //
     private fun onItemClick(listItem: Repository, position: Int, imageView: ImageView) {
 
     }
@@ -78,11 +80,12 @@ class ListFragment : Fragment(R.layout.list_fragment) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        observe(listItemViewModel.repositories, ::onRepositoriesChanged)
+        observe(githubRepositoryListViewModel.publicRepositories, ::onRepositoriesChanged)
+        githubRepositoryListViewModel.searchRepositories?.let { observe(it, ::onRepositoriesChanged) }
     }
 
     private fun onRepositoriesChanged(pagedList: PagedList<Repository>) {
-        adapter.submitList(pagedList)
+        githubRepositoryAdapter.submitList(pagedList)
     }
 
     private fun onViewEvent(viewEvent: ListFragmentViewEvent) {

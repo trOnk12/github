@@ -1,4 +1,4 @@
-package com.example.github.feature.list
+package com.example.github.feature.repositorylist
 
 import android.text.Editable
 import android.text.TextWatcher

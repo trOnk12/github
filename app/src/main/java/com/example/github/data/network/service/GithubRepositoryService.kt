@@ -70,6 +70,28 @@ class GithubRepositoryService
             }
         }
 
-
+    suspend fun get(repositoryName: String) =
+        withContext(Dispatchers.IO) {
+            suspendCoroutine<NetworkGitHubRepositoryResponse> { continuation ->
+                githubRepositoryApi.get(repositoryName).execute().let { response ->
+                    if (response.isSuccessful) {
+                        response.headers().value(NEXT_PAGE_INDEX).let { link ->
+                            response.body()?.let { networkGithubRepositories ->
+                                continuation.resume(
+                                    NetworkGitHubRepositoryResponse(
+                                        paginationInfo = pageLinkMapper.map(PageLinks(link)),
+                                        networkGitHubRepositories = networkGithubRepositories
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        response.errorBody()?.let { responseBody ->
+                            throw Exception(responseBody.string())
+                        }
+                    }
+                }
+            }
+        }
 
 }
