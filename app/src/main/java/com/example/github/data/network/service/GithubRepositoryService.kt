@@ -31,6 +31,21 @@ class GithubRepositoryService
             }
         }
 
+    suspend fun fetchLink(link: String): NetworkGitHubRepositoryResponse =
+        withContext(Dispatchers.IO) {
+            suspendCancellableCoroutine<NetworkGitHubRepositoryResponse> { continuation ->
+                val response = githubRepositoryApi.get().execute()
+                if (response.isSuccessful) {
+                    val headers = response.headers()
+
+                } else {
+                    response.errorBody()?.let { responseBody ->
+                        throw Exception(responseBody.string())
+                    }
+
+                }
+            }
+        }
+
 }
 
-315 109
