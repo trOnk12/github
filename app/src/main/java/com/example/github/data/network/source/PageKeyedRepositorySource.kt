@@ -9,18 +9,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PageKeyedRepositorySource @Inject constructor(
+    private val coroutineScope: CoroutineScope,
     private val githubRepositoryService: GithubRepositoryService,
     private val repositoryMapper: RepositoryMapper
 ) : PageKeyedDataSource<String, Repository>() {
 
-    var coroutineScope: CoroutineScope? = null
     override fun loadInitial(
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, Repository>
     ) {
-        if (coroutineScope == null) throw Exception("No coroutinescope defined")
-
-        coroutineScope?.launch {
+        coroutineScope.launch {
             githubRepositoryService.get().let { response ->
                 callback.onResult(
                     response.networkGitHubRepositories.map { repository ->
@@ -36,9 +34,7 @@ class PageKeyedRepositorySource @Inject constructor(
     }
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Repository>) {
-        if (coroutineScope == null) throw Exception("No coroutinescope defined")
-
-        coroutineScope?.launch {
+        coroutineScope.launch {
             githubRepositoryService.get().let { response ->
                 callback.onResult(
                     response.networkGitHubRepositories.map { repository ->
@@ -46,7 +42,6 @@ class PageKeyedRepositorySource @Inject constructor(
                             repository
                         )
                     },
-                    response.headerData.previousLink,
                     response.headerData.nextLink
                 )
             }
@@ -57,7 +52,7 @@ class PageKeyedRepositorySource @Inject constructor(
         params: LoadParams<String>,
         callback: LoadCallback<String, Repository>
     ) {
-        if (coroutineScope == null) throw Exception("No coroutinescope defined")
+
     }
 
 
