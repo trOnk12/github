@@ -5,7 +5,7 @@ import com.example.github.data.network.model.NetworkOwner
 import com.example.github.domain.model.User
 import javax.inject.Inject
 
-class UserMapper @Inject constructor() : Mapper<NetworkOwner, User> {
+class NetworkOwnerMapper @Inject constructor() : Mapper<NetworkOwner, User> {
 
     override fun map(input: NetworkOwner): User {
         return User(

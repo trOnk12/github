@@ -1,11 +1,11 @@
 package com.example.github.data.network.model
 
 data class NetworkGitHubRepositoryResponse(
-    val nextPageInfo: NextPageInfo,
+    val paginationInfo: PaginationInfo,
     val networkGitHubRepositories: List<NetworkGithubRepository>
 )
 
-data class NextPageInfo(
+data class PaginationInfo(
     val firstLink:String?,
     val nextLink: String?,
     val previousLink: String?

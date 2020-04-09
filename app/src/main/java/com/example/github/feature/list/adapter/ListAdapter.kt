@@ -5,20 +5,19 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.github.databinding.ListItemBinding
 import com.example.github.domain.model.Repository
 
 class ListAdapter(
-    private val onClick: (item: Repository, position: Int, imageView: ImageView) -> Unit,
-    private val onFilterResult: (List<Repository>) -> Unit
-) :
-    androidx.recyclerview.widget.ListAdapter<Repository, ListAdapter.ViewHolder>(DIFF_CALLBACK),
-    Filterable {
+    private val onClick: (item: Repository, position: Int, imageView: ImageView) -> Unit
+) : PagedListAdapter<Repository, ListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private var searchableList: ArrayList<Repository> = ArrayList()
-    private var originalDataSet: List<Repository> = ArrayList()
+//    private var searchableList: ArrayList<Repository> = ArrayList()
+//    private var originalDataSet: PagedList<List<Repository>> = PagedList<List<Repository>>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -27,8 +26,9 @@ class ListAdapter(
         return ViewHolder(binding, onClick)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
 
     class ViewHolder(
         private val binding: ListItemBinding,
@@ -43,41 +43,41 @@ class ListAdapter(
         }
     }
 
-    fun setData(dataSet: List<Repository>) {
-        originalDataSet = dataSet
-        submitList(dataSet)
-    }
+//    fun setData(dataSet: PagedList<List<Repository>>) {
+//        originalDataSet = dataSet
+//        submitList(dataSet)
+//    }
+//
+//    fun filterItems(searchedTitle: CharSequence) {
+//        filter.filter(searchedTitle)
+//    }
 
-    fun filterItems(searchedTitle: CharSequence) {
-        filter.filter(searchedTitle)
-    }
-
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            private val filterResults = FilterResults()
-            override fun performFiltering(searchedTitle: CharSequence?): FilterResults {
-                searchableList.clear()
-                if (searchedTitle.isNullOrBlank()) {
-                    searchableList.addAll(originalDataSet)
-                } else {
-//                    val searchResults =
-//                        originalDataSet.filter {
-//                            it.photoInfo.title.toLowerCase()
-//                                .contains(searchedTitle.toString().toLowerCase())
-//                        }
-//                    searchableList.addAll(searchResults)
-                }
-                return filterResults.also {
-                    it.values = searchableList
-                }
-            }
-
-            override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
-                onFilterResult(searchableList)
-            }
-        }
-
-    }
+//    override fun getFilter(): Filter {
+//        return object : Filter() {
+//            private val filterResults = FilterResults()
+//            override fun performFiltering(searchedTitle: CharSequence?): FilterResults {
+//                searchableList.clear()
+//                if (searchedTitle.isNullOrBlank()) {
+//                    searchableList.addAll(originalDataSet)
+//                } else {
+////                    val searchResults =
+////                        originalDataSet.filter {
+////                            it.photoInfo.title.toLowerCase()
+////                                .contains(searchedTitle.toString().toLowerCase())
+////                        }
+////                    searchableList.addAll(searchResults)
+//                }
+//                return filterResults.also {
+//                    it.values = searchableList
+//                }
+//            }
+//
+//            override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
+//                onFilterResult(searchableList)
+//            }
+//        }
+//
+//    }
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Repository>() {

@@ -1,45 +1,47 @@
 package com.example.github.feature.list
 
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.github.core.functional.Result
-import com.example.github.core.functional.SingleLiveData
-import com.example.github.core.interactor.None
+import com.example.github.data.network.mapper.NetworkGithubRepositoryResponseMapper
+import com.example.github.data.network.service.GithubRepositoryService
 import com.example.github.data.network.source.PageKeyedRepositorySource
-import com.example.github.data.network.source.RepositorySourceFactory
 import com.example.github.domain.model.Repository
-import com.example.github.domain.usecase.GetAllRepositoriesUseCase
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ListFragmentViewModel
 @Inject constructor(
-    private val repositorySourceFactory: RepositorySourceFactory
+    private val networkGithubRepositoryResponseMapper: NetworkGithubRepositoryResponseMapper,
+    private val githubRepositoryService: GithubRepositoryService
 ) : ViewModel() {
 
-    private val _listFragmentViewEvent =
-        SingleLiveData<ListFragmentViewEvent>()
-    val listFragmentViewEvent: LiveData<ListFragmentViewEvent>
-        get() = _listFragmentViewEvent
+    var repositories: LiveData<PagedList<Repository>>
 
-    private val _listItem = MutableLiveData<List<Repository>>()
-    val listItem: LiveData<List<Repository>>
-        get() = _listItem
+    init {
+        val config = PagedList.Config.Builder()
+            .setPageSize(30)
+            .setEnablePlaceholders(false)
+            .build()
+        repositories = initializedPagedListBuilder(config).build()
+    }
 
-//    fun fetchData() {
-//        viewModelScope.launch {
-//            when (val result = getAllRepositoriesUseCase(None())) {
-//                is Result.Success -> _listItem.value = result.data
-//                is Result.Error -> _listFragmentViewEvent.value =
-//                    ListFragmentViewEvent.ShowErrorMessage(result.exception.message)
-//            }
-//        }
-//    }
+    private fun initializedPagedListBuilder(config: PagedList.Config): LivePagedListBuilder<String, Repository> {
+        val dataSourceFactory = object : DataSource.Factory<String, Repository>() {
+            override fun create(): DataSource<String, Repository> {
+                return PageKeyedRepositorySource(
+                    viewModelScope,
+                    networkGithubRepositoryResponseMapper,
+                    githubRepositoryService
+                )
+            }
+
+        }
+
+        return LivePagedListBuilder<String, Repository>(dataSourceFactory, config)
+    }
 
 }
 

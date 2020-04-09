@@ -9,9 +9,6 @@ import retrofit2.http.Url
 
 interface GithubRepositoryApi {
 
-    @GET("users/{id}")
-    fun get(@Path("name") name: String): Call<List<NetworkGithubRepository>>
-
     @GET("/repositories")
     fun get(): Call<List<NetworkGithubRepository>>
 

@@ -7,13 +7,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagedList
 import com.example.github.GithubApp
 import com.example.github.R
 import com.example.github.core.extension.observe
 import com.example.github.domain.model.Repository
 import com.example.github.feature.list.adapter.ListAdapter
 import dog.snow.androidrecruittest.feature.list.DaggerListFragmentComponent
-import kotlinx.android.synthetic.main.layout_search.*
 import kotlinx.android.synthetic.main.list_fragment.*
 import javax.inject.Inject
 
@@ -47,48 +47,42 @@ class ListFragment : Fragment(R.layout.list_fragment) {
     }
 
     private fun initializeView() {
-        adapter = ListAdapter(::onItemClick, ::onFilterResult).also {
+        adapter = ListAdapter(::onItemClick).also {
             rv_items.adapter = it
         }
 
-        et_search.addTextChangedListener(object : OnSearchTermChangedListener {
-            override fun onSearchTermChanged(p0: CharSequence?) {
-                p0?.let {
-                    adapter.filterItems(p0)
-                }
-            }
-        })
+//        et_search.addTextChangedListener(object : OnSearchTermChangedListener {
+//            override fun onSearchTermChanged(p0: CharSequence?) {
+//                p0?.let {
+//                    adapter.filterItems(p0)
+//                }
+//            }
+//        })
     }
 
+    //
     private fun onItemClick(listItem: Repository, position: Int, imageView: ImageView) {
 
     }
 
-    private fun onFilterResult(list: List<Repository>) {
-        if (list.isEmpty()) {
-            empty_view.visibility = View.VISIBLE
-            rv_items.visibility = View.GONE
-        } else {
-            empty_view.visibility = View.GONE
-            rv_items.visibility = View.VISIBLE
-            adapter.submitList(list)
-        }
-    }
+//    private fun onFilterResult(list: List<Repository>) {
+//        if (list.isEmpty()) {
+//            empty_view.visibility = View.VISIBLE
+//            rv_items.visibility = View.GONE
+//        } else {
+//            empty_view.visibility = View.GONE
+//            rv_items.visibility = View.VISIBLE
+//            adapter.submitList(list)
+//        }
+//    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        observe(listItemViewModel.listFragmentViewEvent, ::onViewEvent)
-        observe(listItemViewModel.listItem, ::onListItemChanged)
-
-        if (savedInstanceState == null)
-            listItemViewModel.fetchData()
+        observe(listItemViewModel.repositories, ::onRepositoriesChanged)
     }
 
-    private fun onListItemChanged(listItems: List<Repository>) {
-        adapter.setData(listItems)
-
-        rv_items.visibility = View.VISIBLE
-        empty_view.visibility = View.GONE
+    private fun onRepositoriesChanged(pagedList: PagedList<Repository>) {
+        adapter.submitList(pagedList)
     }
 
     private fun onViewEvent(viewEvent: ListFragmentViewEvent) {
