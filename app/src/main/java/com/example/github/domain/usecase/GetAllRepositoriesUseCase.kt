@@ -12,7 +12,7 @@ class GetAllRepositoriesUseCase
 ) : UseCase<List<Repository>, None>() {
 
     override suspend fun run(params: None): List<Repository> {
-        return gitHubRepository.get()
+        return gitHubRepository.getPublic()
     }
 
 }
