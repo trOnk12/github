@@ -1,5 +1,6 @@
-package com.example.github.data.network.model
+package com.example.github.data.network.model.public_repository
 
+import com.example.github.data.network.model.NetworkOwner
 import com.google.gson.annotations.SerializedName
 
 

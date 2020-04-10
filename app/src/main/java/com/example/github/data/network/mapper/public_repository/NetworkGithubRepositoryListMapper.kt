@@ -1,8 +1,7 @@
-package com.example.github.data.network.mapper
+package com.example.github.data.network.mapper.public_repository
 
 import com.example.github.core.functional.mapper.ListMapper
-import com.example.github.core.functional.mapper.Mapper
-import com.example.github.data.network.model.NetworkGithubRepository
+import com.example.github.data.network.model.public_repository.NetworkGithubRepository
 import com.example.github.domain.model.Repository
 import javax.inject.Inject
 

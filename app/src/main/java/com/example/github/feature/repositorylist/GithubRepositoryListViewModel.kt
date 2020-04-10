@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.github.data.network.mapper.NetworkGithubRepositoryResponseMapper
+import com.example.github.data.network.mapper.public_repository.NetworkGithubRepositoryResponseMapper
 import com.example.github.data.network.service.GithubRepositoryService
 import com.example.github.data.network.source.PageKeyedRepositorySearchSource
-import com.example.github.data.network.source.PageKeyedRepositorySource
+import com.example.github.data.network.source.PagekeydRepositoryPublicSource
 import com.example.github.domain.model.Repository
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class GithubRepositoryListViewModel
     private fun initializePublicRepositoriesPagedList(config: PagedList.Config): LivePagedListBuilder<String, Repository> {
         val dataSourceFactory = object : DataSource.Factory<String, Repository>() {
             override fun create(): DataSource<String, Repository> {
-              return PageKeyedRepositorySource(
+              return PagekeydRepositoryPublicSource(
                     viewModelScope,
                     networkGithubRepositoryResponseMapper,
                     githubRepositoryService

@@ -1,7 +1,7 @@
 package com.example.github.data.network.source
 
 import androidx.paging.PageKeyedDataSource
-import com.example.github.data.network.mapper.NetworkGithubRepositoryResponseMapper
+import com.example.github.data.network.mapper.search.NetworkGithubSearchMapper
 import com.example.github.data.network.service.GithubRepositoryService
 import com.example.github.domain.model.Repository
 import kotlinx.coroutines.CoroutineScope
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class PageKeyedRepositorySearchSource(
     private val repositoryName:String,
     private val coroutineScope: CoroutineScope,
-    private val networkGithubRepositoryResponseMapper: NetworkGithubRepositoryResponseMapper,
+    private val networkGithubSearchMapper: NetworkGithubSearchMapper,
     private val githubRepositoryService: GithubRepositoryService
 ) : PageKeyedDataSource<String, Repository>() {
 
@@ -19,11 +19,11 @@ class PageKeyedRepositorySearchSource(
         callback: LoadInitialCallback<String, Repository>
     ) {
         coroutineScope.launch {
-            githubRepositoryService.get(repositoryName).let { networkGitHubRepositoryResponse ->
+            githubRepositoryService.search(repositoryName).let { networkGithubSearch ->
                 callback.onResult(
-                    networkGithubRepositoryResponseMapper.map(networkGitHubRepositoryResponse),
+                    networkGithubSearchMapper.map(networkGithubSearch),
                     null,
-                    networkGitHubRepositoryResponse.paginationInfo.nextLink
+                    networkGithubSearch.paginationInfo.nextLink
                 )
             }
         }
@@ -34,7 +34,7 @@ class PageKeyedRepositorySearchSource(
             githubRepositoryService.getByLink(params.key).let { networkGitHubRepositoryResponse ->
                 callback.onResult(
                     networkGithubRepositoryResponseMapper.map(networkGitHubRepositoryResponse),
-                    networkGitHubRepositoryResponse.paginationInfo.nextLink
+                    networkGitHubRepositoryResponse.pageLinks.nextLink
                 )
             }
         }

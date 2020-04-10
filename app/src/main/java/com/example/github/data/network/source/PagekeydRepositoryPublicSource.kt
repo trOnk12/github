@@ -1,16 +1,16 @@
 package com.example.github.data.network.source
 
 import androidx.paging.PageKeyedDataSource
-import com.example.github.data.network.mapper.NetworkGithubRepositoryResponseMapper
+import com.example.github.data.network.mapper.public_repository.NetworkGithubRepositoryResponseMapper
 import com.example.github.data.network.service.GithubRepositoryService
 import com.example.github.domain.model.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class PageKeyedRepositorySource(
+class PagekeydRepositoryPublicSource(
     private val coroutineScope: CoroutineScope,
-    private val networkGithubRepositoryResponseMapper: NetworkGithubRepositoryResponseMapper,
-    private val githubRepositoryService: GithubRepositoryService
+    private val githubRepositoryService: GithubRepositoryService,
+    private val networkGithubRepositoryResponseMapper: NetworkGithubRepositoryResponseMapper
 ) : PageKeyedDataSource<String, Repository>() {
 
     override fun loadInitial(
@@ -22,7 +22,7 @@ class PageKeyedRepositorySource(
                 callback.onResult(
                     networkGithubRepositoryResponseMapper.map(networkGitHubRepositoryResponse),
                     null,
-                    networkGitHubRepositoryResponse.paginationInfo.nextLink
+                    networkGitHubRepositoryResponse.pageLinks.nextLink
                 )
             }
         }
@@ -33,7 +33,7 @@ class PageKeyedRepositorySource(
             githubRepositoryService.getByLink(params.key).let { networkGitHubRepositoryResponse ->
                 callback.onResult(
                     networkGithubRepositoryResponseMapper.map(networkGitHubRepositoryResponse),
-                    networkGitHubRepositoryResponse.paginationInfo.nextLink
+                    networkGitHubRepositoryResponse.pageLinks.nextLink
                 )
             }
         }
